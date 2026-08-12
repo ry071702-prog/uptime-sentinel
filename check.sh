@@ -53,7 +53,7 @@ while IFS=$'\t' read -r name url expect note; do
     down=$((down + 1))
     echo "DOWN $name  $detail"
     if [ -z "$existing" ]; then
-      headers=$(curl -sSIv -m 20 "$url" 2>&1 | head -40 || true)
+      headers=$(curl -sSI -m 20 "$url" 2>&1 | head -30 || true)
       gh issue create --repo "$REPO" --title "$title" --body "$(printf '%s\n' \
         "| 項目 | 値 |" \
         "|---|---|" \
