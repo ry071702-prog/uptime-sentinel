@@ -3,5 +3,5 @@ game-portal	https://game-portal.pages.dev	Game Portal	~/game-portal (Cloudflare 
 codelog	https://codelog-three.vercel.app	codelog	~/codelog (Vercel)
 claude-code-finder	https://claude-code-finder.pages.dev	逆引き辞典	~/claude-code-finder (Cloudflare Pages)
 activate-board	https://naitei-activate.web.app	アクティベ	~/activate-board (Firebase Hosting)
-meets-mockup	https://meets-mockup.web.app	MeetS	ca-sites/design-mockups (Firebase Hosting)
+meets-mockup	https://meets-mockup.web.app	-	ca-sites/design-mockups (Firebase Hosting)
 splitmate	https://splitmate.vercel.app	-	~/splitmate (Vercel)
