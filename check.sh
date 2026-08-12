@@ -16,8 +16,11 @@ down=0
 while IFS=$'\t' read -r name url expect note; do
   [ -z "${name:-}" ] && continue
   case "$name" in \#*) continue ;; esac
+  # タブは IFS 空白扱いで連続すると1つに潰れフィールドがずれるため、
+  # 「期待文字列なし」は空欄でなく "-" で表す
+  [ "$expect" = "-" ] && expect=""
 
-  ok=1; detail=""
+  ok=1; detail=""; snippet=""
   for attempt in 1 2; do
     resp=$(curl -sS -m 20 -w '\n__META__ %{http_code} %{time_total}s' "$url" 2>&1)
     meta=$(printf '%s' "$resp" | grep '^__META__' | tail -1)
@@ -25,6 +28,7 @@ while IFS=$'\t' read -r name url expect note; do
     if [ "$code" = "200" ]; then
       if [ -n "$expect" ] && ! printf '%s' "$resp" | grep -q "$expect"; then
         ok=0; detail="HTTP 200 だが期待文字列「$expect」が本文に無い (白画面/壊れたデプロイの疑い)"
+        snippet=$(printf '%s' "$resp" | head -c 300)
       else
         ok=1; detail="HTTP 200 (${meta#__META__ })"
       fi
@@ -58,9 +62,15 @@ while IFS=$'\t' read -r name url expect note; do
         "| 検知 (UTC) | $(date -u '+%F %T') |" \
         "| デプロイ元 | $note |" \
         "" \
+        "レスポンスヘッダ:" \
         '```' \
         "$headers" \
         '```' \
+        "" \
+        "${snippet:+ランナーが受信した本文の先頭300字:}" \
+        "${snippet:+\`\`\`}" \
+        "${snippet:-}" \
+        "${snippet:+\`\`\`}" \
         "" \
         "一次切り分け材料は上記  深掘りはローカルの Claude Code でこの Issue を読んで行う  復旧すると自動クローズ")"
     else
