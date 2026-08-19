@@ -79,6 +79,37 @@ while IFS=$'\t' read -r name url expect note; do
   fi
 done < targets.tsv
 
+# Mac 死活 (dead man's switch): Mac 側 automation-selfheal.sh が1日2回 push する
+# .pulse の鮮度を見る  26時間 (2回分+余裕) 更新が無ければ Mac の自動化群が
+# 止まっている可能性として Issue を立てる  復旧したら自動クローズ
+mac_title="🔴 Mac の自動化群が停止している可能性"
+mac_existing=$(gh issue list --repo "$REPO" --state open --search "\"$mac_title\" in:title" --json number --jq '.[0].number' 2>/dev/null || true)
+if [ -f .pulse ]; then
+  pulse_ts=$(cat .pulse)
+  pulse_epoch=$(date -u -d "$pulse_ts" +%s 2>/dev/null || echo 0)
+  age_h=$(( ($(date -u +%s) - pulse_epoch) / 3600 ))
+  if [ "$pulse_epoch" = 0 ] || [ "$age_h" -ge 26 ]; then
+    down=$((down + 1))
+    echo "DOWN mac-pulse  最終発信 ${pulse_ts} (${age_h}時間前)"
+    if [ -z "$mac_existing" ]; then
+      gh issue create --repo "$REPO" --title "$mac_title" --body "$(printf '%s\n' \
+        "| 項目 | 値 |" \
+        "|---|---|" \
+        "| 最終 pulse (UTC) | $pulse_ts |" \
+        "| 経過 | ${age_h}時間 |" \
+        "| 発信元 | Mac の automation-selfheal.sh (毎日 09:05 / 21:30 JST) |" \
+        "" \
+        "Mac がスリープ/シャットダウン/キーチェーンロックで launchd 自動化が全停止している可能性  Mac を起こして \`bash ~/.claude/lib/automation-health.sh\` で確認  復旧すると自動クローズ")"
+    fi
+  else
+    echo "OK mac-pulse  最終発信 ${age_h}時間前"
+    if [ -n "$mac_existing" ]; then
+      gh issue close "$mac_existing" --repo "$REPO" --comment "pulse 復旧を確認 (最終発信 ${age_h}時間前)"
+      echo "RECOVERED mac-pulse"
+    fi
+  fi
+fi
+
 # 60日無 push で cron が止まる対策: 月が替わったら .keepalive を push
 month=$(date -u '+%Y-%m')
 if [ "$(cat .keepalive 2>/dev/null)" != "$month" ]; then
