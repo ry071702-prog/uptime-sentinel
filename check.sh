@@ -26,7 +26,9 @@ while IFS=$'\t' read -r name url expect note; do
     meta=$(printf '%s' "$resp" | grep '^__META__' | tail -1)
     code=$(printf '%s' "$meta" | awk '{print $2}')
     if [ "$code" = "200" ]; then
-      if [ -n "$expect" ] && ! printf '%s' "$resp" | grep -q "$expect"; then
+      # `printf | grep -q` は pipefail 下で誤判定する (grep が先に終わり printf が SIGPIPE で落ちる)
+      # Linux では大きい本文で起き、meets-mockup (約50KB) だけが落ち続けた (ubuntu:24.04 で20回中20回再現)
+      if [ -n "$expect" ] && [[ "$resp" != *"$expect"* ]]; then
         ok=0; detail="HTTP 200 だが期待文字列「$expect」が本文に無い (白画面/壊れたデプロイの疑い)"
         snippet=$(printf '%s' "$resp" | head -c 300)
       else
