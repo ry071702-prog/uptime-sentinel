@@ -5,7 +5,8 @@ codelog	https://codelog-three.vercel.app	codelog	~/codelog (Vercel)
 claude-code-finder	https://claude-code-finder.pages.dev	逆引き辞典	~/claude-code-finder (Cloudflare Pages)
 # 2026-10-28 一旦停止 (firebase hosting:disable)  再開時に行頭の # を外す
 #activate-board	https://naitei-activate.web.app	アクティベ	~/activate-board (Firebase Hosting)
-meets-mockup	https://meets-mockup.web.app	MeetS Mockups	ca-sites/design-mockups (Firebase Hosting)
+# 2026-10-29 期待文字列を外した  ランナーからだけ本文に見つからず誤検知が続くため (8/12 の 104c7ad と同じ理由)  戻す前に両コミットを読む
+meets-mockup	https://meets-mockup.web.app	-	ca-sites/design-mockups (Firebase Hosting)
 splitmate	https://splitmate.vercel.app	-	~/splitmate (Vercel)
 info-collector	https://info-collector-a5y.pages.dev	情報収集	~/情報収集 (Cloudflare Pages)
 claude-dex	https://ry071702-prog.github.io/claude-dex/	claude-dex	~/claude-dex (GitHub Pages)
