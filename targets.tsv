@@ -6,7 +6,8 @@ claude-code-finder	https://claude-code-finder.pages.dev	逆引き辞典	~/claude
 # 2026-10-28 一旦停止 (firebase hosting:disable)  再開時に行頭の # を外す
 #activate-board	https://naitei-activate.web.app	アクティベ	~/activate-board (Firebase Hosting)
 # 2026-10-29 期待文字列を戻した  ランナーでだけ見つからなかったのは check.sh の判定 (pipefail 下の printf | grep -q) が原因だった  キャッシュではない (104c7ad・e93dece の見立ては誤り)
-meets-mockup	https://meets-mockup.web.app	MeetS Mockups	ca-sites/design-mockups (Firebase Hosting)
+# 2026-10-29 終了 (もう使わない  firebase hosting:disable --site meets-mockup)  再開時に行頭の # を外す
+#meets-mockuphttps://meets-mockup.web.app	MeetS Mockups	ca-sites/design-mockups (Firebase Hosting)
 splitmate	https://splitmate.vercel.app	-	~/splitmate (Vercel)
 info-collector	https://info-collector-a5y.pages.dev	情報収集	~/情報収集 (Cloudflare Pages)
 claude-dex	https://ry071702-prog.github.io/claude-dex/	claude-dex	~/claude-dex (GitHub Pages)
